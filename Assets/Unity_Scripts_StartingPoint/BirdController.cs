@@ -51,7 +51,7 @@ public class BirdController : MonoBehaviour
     {
         isDead = false;
         rb.gravityScale = 3f;
-        Flap(); 
+        Flap();
     }
 
     private void Flap()
@@ -62,7 +62,7 @@ public class BirdController : MonoBehaviour
 
     private void UpdateRotation()
     {
-        
+
         float targetAngle = Mathf.Lerp(0f, maxDownAngle, -rb.linearVelocity.y / referenceVelocity);
         targetAngle = Mathf.Clamp(targetAngle, maxDownAngle, maxUpAngle);
 
@@ -97,7 +97,7 @@ public class BirdController : MonoBehaviour
     private void Die()
     {
         isDead = true;
-        rb.gravityScale = 1f; 
+        rb.gravityScale = 1f;
         rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
         GameManager.Instance.OnBirdDied();
     }

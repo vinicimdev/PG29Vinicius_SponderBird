@@ -8,6 +8,9 @@ public class GameManager : MonoBehaviour
     public enum GameState { Idle, Playing, GameOver }
     public GameState State { get; private set; } = GameState.Idle;
 
+    private float sessionStartTime;
+    private System.DateTime sessionStartUtc;
+    
     [Header("Scene References")]
     [SerializeField] private BirdController bird;
     [SerializeField] private PipeSpawner pipeSpawner;
@@ -68,6 +71,8 @@ public class GameManager : MonoBehaviour
     private void StartGame()
     {
         State = GameState.Playing;
+        sessionStartTime = Time.time;
+        sessionStartUtc = System.DateTime.UtcNow;
 
         if (startPanel != null) startPanel.SetActive(false);
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
@@ -83,6 +88,17 @@ public class GameManager : MonoBehaviour
 
         if (pipeSpawner != null) pipeSpawner.SetSpawning(false);
         if (ScoreManager.Instance != null) ScoreManager.Instance.SaveHighScore();
+
+        // Telemetry submission
+        int finalScore = ScoreManager.Instance != null ? ScoreManager.Instance.GetCurrentScore() : 0;
+        int pipesPassed = finalScore;
+        int durationSeconds = Mathf.RoundToInt(Time.time - sessionStartTime);
+
+        string startIso = sessionStartUtc.ToString("o");
+        string endIso = sessionStartUtc.ToString("o");
+
+        if (FirebaseManager.Instance != null)
+            FirebaseManager.Instance.SubmitScore(finalScore, pipesPassed, durationSeconds, startIso, endIso);
 
         Invoke(nameof(ShowGameOver), 0.6f);
     }

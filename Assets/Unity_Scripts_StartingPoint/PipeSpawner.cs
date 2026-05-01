@@ -15,7 +15,7 @@ public class PipeSpawner : MonoBehaviour
     [SerializeField] private float minSpawnInterval = 1.2f;
 
     [Tooltip("How much to reduce spawn interval per second of play")]
-    [SerializeField] private float difficultyRampRate = 0f; 
+    [SerializeField] private float difficultyRampRate = 0f;
 
     private bool isSpawning = false;
     private float currentInterval;
@@ -32,7 +32,7 @@ public class PipeSpawner : MonoBehaviour
         isSpawning = spawn;
         if (spawn)
         {
-            timer = currentInterval; 
+            timer = currentInterval;
         }
     }
 
